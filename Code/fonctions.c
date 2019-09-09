@@ -164,6 +164,7 @@ void exo_2(mp* master)
   raw_to_fichierEntete(header);
   //
   exo_2_1(header);
+  exo_2_2(header,master);
 }
 
 void exo_2_1(bitmap* header)
@@ -315,7 +316,89 @@ void show_struct(bitmap* header)
 
 void exo_2_2(bitmap* header,mp* master)
 {
+  couleurPallete* rvb = extract_RVB(header,master);
+  rvb = reach_first_cell(rvb);
 
+
+}
+
+couleurPallete* extract_RVB(bitmap* header,mp* master)
+{
+  FILE* In;
+  do {
+    In = fopen("transporteur.bmp","rb");
+     }while(test_succes(In) != YES);
+
+  char character = '\0';
+  unsigned char hidden_bit = 0;
+  for(int cursor = 0 ; cursor < header->size_header ; cursor++)
+    {
+      character = getc(In);
+    }
+
+  unsigned char buffer = 0;
+  couleurPallete* couleur = NULL;
+  do {
+      couleur = new_cell(couleur,master);
+      for(int rank = 0 ; rank < 24 ; rank++)
+        {
+          character = getc(In);
+          hidden_bit = (unsigned char)character&LSB;
+          if( rank == 7 || rank == 15 || rank == 23)
+            {
+            buffer += hidden_bit*pow(2,(rank)%8);
+            switch (rank) {
+                case 7:
+                    couleur->R = buffer;
+                    buffer = 0;
+                    break;
+                case 15:
+                    couleur->V = buffer;
+                    buffer = 0;
+                    break;
+                case 23:
+                    couleur->B = buffer;
+                    buffer = 0;
+                    break;
+              }
+          }
+        }
+      } while(character != EOF);
+  fclose(In);
+  return couleur;
+}
+
+couleurPallete* new_cell(couleurPallete* last_cell,mp* master)
+{
+  couleurPallete* to_return;
+  do{
+    to_return = malloc(sizeof(couleurPallete));
+    if (test_succes(to_return) == YES)
+      add_pointer_master((void*)to_return ,master);
+     }while(test_succes(to_return) != YES);
+
+  if (last_cell == NULL)
+    {
+      to_return->next = NULL;
+      to_return->previous = NULL;
+    }
+  else
+    {
+      to_return->next = NULL;
+      to_return->previous = last_cell;
+      last_cell->next = to_return;
+    }
+  return to_return;
+}
+
+couleurPallete* reach_first_cell(couleurPallete* cell)
+{
+  couleurPallete* to_return = cell;
+  while(to_return->previous != NULL)
+    {
+      to_return = to_return->previous;
+    }
+  return to_return;
 }
 
 /* -------------Exo 2------------- */

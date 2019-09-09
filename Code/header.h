@@ -9,6 +9,7 @@
 #define YES 333
 #define NO 4444
 #define MAX_TRY 100
+#define LSB 1
 
 /* master_pointer */
 typedef struct mp mp;
@@ -49,12 +50,16 @@ typedef struct __attribute__((__packed__)) {
 	unsigned int nombreCouleursImportantes;
 } imageEntete;
 
-typedef struct __attribute__((__packed__)) {
+typedef struct couleurPallete couleurPallete;
+struct couleurPallete
+{
 	unsigned char B;
 	unsigned char V;
 	unsigned char R;
 	unsigned char reserve;
-} couleurPallete;
+  couleurPallete* next;
+  couleurPallete* previous;
+};
 
 typedef struct __attribute__((__packed__)) {
   fichierEntete* fichier;
@@ -96,6 +101,9 @@ void raw_to_imageEntete(bitmap* header);
 void show_struct(bitmap* header);
 
 void exo_2_2(bitmap* header,mp* master);
+couleurPallete* new_cell(couleurPallete* last_cell,mp* master);
+couleurPallete* reach_first_cell(couleurPallete* cell);
+couleurPallete* extract_RVB(bitmap* header,mp* master);
 /* main (devrait être vide) */
 
 /* test */
