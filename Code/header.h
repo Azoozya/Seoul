@@ -94,8 +94,8 @@ void exo_2(mp* master);
 void exo_2_1(bitmap* header);
 bitmap* init_header(mp* master);
 void extract_raw_header(bitmap* header,mp* master);
-unsigned short char_to_short(unsigned char lsB,unsigned char msB);
-unsigned int char_to_int(unsigned char lsB,unsigned char second,unsigned char third,unsigned char msB);
+unsigned short char_to_short(unsigned char msB,unsigned char lsB);
+unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char msB,unsigned char third);
 void raw_to_fichierEntete(bitmap* header);
 void raw_to_imageEntete(bitmap* header);
 void show_struct(bitmap* header);
@@ -103,7 +103,7 @@ void show_struct(bitmap* header);
 void exo_2_2(bitmap* header,mp* master);
 couleurPallete* new_cell(couleurPallete* last_cell,mp* master);
 couleurPallete* reach_first_cell(couleurPallete* cell);
-couleurPallete* extract_RVB(bitmap* header,mp* master);
+couleurPallete* extract_RVB(FILE* In,bitmap* header,mp* master);
 /* main (devrait être vide) */
 
 /* test */

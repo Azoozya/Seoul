@@ -143,7 +143,7 @@ int* merge_bits(char* bits,long max_alpha_char,mp* master)
     {
       buffer = 0;
       //POWER
-      for(int power = 7 ; power >= 0 ; power--)
+      for(int power = 0 ; power < 8 ; power++)
         {
           buffer += bits[cursor]*pow(2,power);
           cursor++;
@@ -160,8 +160,8 @@ void exo_2(mp* master)
 {
   bitmap* header = init_header(master);
   extract_raw_header(header,master);
-  raw_to_imageEntete(header);
   raw_to_fichierEntete(header);
+  raw_to_imageEntete(header);
   //
   exo_2_1(header);
   exo_2_2(header,master);
@@ -244,6 +244,7 @@ void extract_raw_header(bitmap* header,mp* master)
   for(int cursor = 0 ; cursor < header->size_header ; cursor++)
     {
       buffer = getc(In);
+      printf("[Xtract] %x\n",buffer);
       raw[cursor] = buffer;
     }
 
@@ -261,17 +262,28 @@ void extract_raw_header(bitmap* header,mp* master)
   fclose(In);
 }
 
-unsigned short char_to_short(unsigned char lsB,unsigned char msB)
+unsigned short char_to_short(unsigned char msB,unsigned char lsB)
 {
   unsigned short to_return = 0;
   to_return = lsB+pow(2,8)*msB;
   return to_return;
 }
 
-unsigned int char_to_int(unsigned char lsB,unsigned char second,unsigned char third,unsigned char msB)
+unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char msB,unsigned char third)
 {
     unsigned int to_return = 0;
-    to_return = lsB+pow(2,8)*second+pow(2,16)*third+pow(2,24)*msB;
+    printf("%x:%x:%x:%x\n",lsB,second,third,msB);
+    to_return += msB;
+    printf("1 : %x\t",to_return);
+    to_return *= 256;
+    to_return += third;
+    printf("2 : %x\t",to_return);
+    to_return *= 256;
+    to_return += second;
+    printf("3 : %x\t",to_return);
+    to_return *= 256;
+    to_return += lsB;
+    printf("4 : %x\n",to_return);
     return to_return;
 }
 
@@ -316,26 +328,35 @@ void show_struct(bitmap* header)
 
 void exo_2_2(bitmap* header,mp* master)
 {
-  couleurPallete* rvb = extract_RVB(header,master);
-  rvb = reach_first_cell(rvb);
+  FILE *In,*Out;
+  do {
+      In = fopen("transporteur.bmp","rb");
+      Out = fopen("Ex2_2.bmp","wb");
+     }while(test_succes(In) != YES || test_succes(Out) != YES);
 
+  // for(int cursor = 0 ; cursor < header->size_header ; cursor++)
+  //     {
+  //       fprintf(Out,"%c",getc(In));
+  //     }
+ int size = (( int)header->image->tailleEntete*3)+(int)header->image->hauteur+54;
+ printf("%d\n",size);
+  // char lama;
+  // for(int cursor = 0 ; cursor < size; cursor++)
+  // {
+  //   lama = getc(In);
+  //   printf("%c",lama);
+  // }
 
+  //couleurPallete* rvb = extract_RVB(In,header,master);
+
+  fclose(In);
+  fclose(Out);
 }
 
-couleurPallete* extract_RVB(bitmap* header,mp* master)
+couleurPallete* extract_RVB(FILE* In,bitmap* header,mp* master)
 {
-  FILE* In;
-  do {
-    In = fopen("transporteur.bmp","rb");
-     }while(test_succes(In) != YES);
-
-  char character = '\0';
   unsigned char hidden_bit = 0;
-  for(int cursor = 0 ; cursor < header->size_header ; cursor++)
-    {
-      character = getc(In);
-    }
-
+  char character = '\0';
   unsigned char buffer = 0;
   couleurPallete* couleur = NULL;
   do {
@@ -346,8 +367,8 @@ couleurPallete* extract_RVB(bitmap* header,mp* master)
           hidden_bit = (unsigned char)character&LSB;
           if( rank == 7 || rank == 15 || rank == 23)
             {
-            buffer += hidden_bit*pow(2,(rank)%8);
-            switch (rank) {
+            buffer += hidden_bit*pow(2,7-((rank)%8));
+            switch (rank){
                 case 7:
                     couleur->R = buffer;
                     buffer = 0;
@@ -360,12 +381,11 @@ couleurPallete* extract_RVB(bitmap* header,mp* master)
                     couleur->B = buffer;
                     buffer = 0;
                     break;
-              }
-          }
+                          }
+            }
         }
       } while(character != EOF);
-  fclose(In);
-  return couleur;
+  return reach_first_cell(couleur);
 }
 
 couleurPallete* new_cell(couleurPallete* last_cell,mp* master)
@@ -388,6 +408,7 @@ couleurPallete* new_cell(couleurPallete* last_cell,mp* master)
       to_return->previous = last_cell;
       last_cell->next = to_return;
     }
+    printf("Nouvelle Cellule\n");
   return to_return;
 }
 
