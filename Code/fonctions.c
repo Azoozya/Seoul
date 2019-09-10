@@ -164,7 +164,8 @@ void exo_2(mp* master)
   raw_to_imageEntete(header);
   //
   exo_2_1(header);
-  exo_2_2(header,master);
+  exo_2_2(header);
+  exo_2_3(header);
 }
 
 void exo_2_1(bitmap* header)
@@ -324,7 +325,7 @@ void show_struct(bitmap* header)
   fclose(Out);
 }
 
-void exo_2_2(bitmap* header,mp* master)
+void exo_2_2(bitmap* header)
 {
   FILE *In,*Out;
   do {
@@ -355,5 +356,46 @@ void exo_2_2(bitmap* header,mp* master)
   fclose(Out);
 }
 
+void exo_2_3(bitmap* header)
+{
+  FILE *Source,*Transporteur,*Out;
+  do{
+      Source = fopen("Ex2_2.jpg","rb");
+      Transporteur = fopen("originel.bmp","rb");
+      Out = fopen("Ex2_3.bmp","wb");
+      printf("%p::%p:%p\n",Source,Transporteur,Out);
+    }while(test_succes(Transporteur) != YES || test_succes(Source) != YES || test_succes(Out) != YES);
+
+  int character_source = '\0';
+  int character_transporteur = '\0';
+  int bits[8] = {0};
+
+  for(int cursor = 0 ; cursor < 54 ; cursor++)
+    {
+        fprintf(Out,"%c",getc(Transporteur));
+    }
+
+  do {
+    character_source = getc(Source);
+    bits[0] = (character_source&MSB)>>7;
+    bits[1] = (character_source&SSSSSB)>>6;
+    bits[2] = (character_source&SSSB)>>5;
+    bits[3] = (character_source&FFSB)>>4;
+    bits[4] = (character_source&FSB)>>3;
+    bits[5] = (character_source&TSB)>>2;
+    bits[6] = (character_source&SSB)>>1;
+    bits[7] = (character_source&LSB);
+    for(int cursor = 0 ; cursor < 8 ; cursor++)
+      {
+        character_transporteur= getc(Transporteur);
+        character_transporteur= character_transporteur&254;
+        fprintf(Out,"%c",character_transporteur+bits[cursor]);
+      }
+  } while(character_source!= EOF);
+
+  fclose(Source);
+  fclose(Transporteur);
+  fclose(Out);
+}
 
 /* -------------Exo 2------------- */

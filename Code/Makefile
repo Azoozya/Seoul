@@ -28,4 +28,4 @@ test:
 purge:
 	rm -rf *.o
 	rm -rf *.psh
-	rm -rf Final Test Ex*
+	rm -rf Final Test

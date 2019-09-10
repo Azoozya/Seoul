@@ -9,7 +9,15 @@
 #define YES 333
 #define NO 4444
 #define MAX_TRY 100
+
 #define LSB 1
+#define SSB 2
+#define TSB 4
+#define FSB 8
+#define FFSB 16
+#define SSSB 32
+#define SSSSSB 64
+#define MSB 128
 
 /* master_pointer */
 typedef struct mp mp;
@@ -99,8 +107,9 @@ void raw_to_fichierEntete(bitmap* header);
 void raw_to_imageEntete(bitmap* header);
 void show_struct(bitmap* header);
 
-void exo_2_2(bitmap* header,mp* master);
+void exo_2_2(bitmap* header);
 
+void exo_2_3(bitmap* header);
 /* main (devrait être vide) */
 
 /* test */
