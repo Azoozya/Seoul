@@ -57,8 +57,7 @@ struct couleurPallete
 	unsigned char V;
 	unsigned char R;
 	unsigned char reserve;
-  couleurPallete* next;
-  couleurPallete* previous;
+
 };
 
 typedef struct __attribute__((__packed__)) {
@@ -101,9 +100,7 @@ void raw_to_imageEntete(bitmap* header);
 void show_struct(bitmap* header);
 
 void exo_2_2(bitmap* header,mp* master);
-couleurPallete* new_cell(couleurPallete* last_cell,mp* master);
-couleurPallete* reach_first_cell(couleurPallete* cell);
-couleurPallete* extract_RVB(FILE* In,bitmap* header,mp* master);
+
 /* main (devrait être vide) */
 
 /* test */

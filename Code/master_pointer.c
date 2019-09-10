@@ -53,9 +53,11 @@ void delete_down(mp* head)
   do
     {
       buffer = head->next;
+      if(head->pointer != head)
+        free(head->pointer);
       free(head);
       head = buffer;
-      counter++;
+      counter += 2;
     }
     while (head != NULL);
   printf("Suppression de %d cellules effectué\n",counter);

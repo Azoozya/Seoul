@@ -84,7 +84,7 @@ long get_nb_alpha_char(char* filename)
 {
   FILE *In;
   long to_return = 0;
-  char character = '\0';
+  int character = '\0';
   In = fopen(filename,"r");
 
   do {
@@ -93,7 +93,7 @@ long get_nb_alpha_char(char* filename)
       {
         to_return++;
       }
-    to_return++;
+     to_return++;
      }while(character != EOF);
 
   fclose(In);
@@ -104,7 +104,7 @@ char* alpha_filter(char* filename,long max_alpha_char,mp* master)
 {
   FILE* In;
   char* to_return;
-  char character;
+  int character;
   long counter = 0;
   do {
       to_return = malloc(max_alpha_char*sizeof(char));
@@ -244,7 +244,6 @@ void extract_raw_header(bitmap* header,mp* master)
   for(int cursor = 0 ; cursor < header->size_header ; cursor++)
     {
       buffer = getc(In);
-      printf("[Xtract] %x\n",buffer);
       raw[cursor] = buffer;
     }
 
@@ -265,25 +264,24 @@ void extract_raw_header(bitmap* header,mp* master)
 unsigned short char_to_short(unsigned char msB,unsigned char lsB)
 {
   unsigned short to_return = 0;
-  to_return = lsB+pow(2,8)*msB;
+  to_return = lsB+256*msB;
   return to_return;
 }
 
 unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char msB,unsigned char third)
 {
-    unsigned int to_return = 0;
-    printf("%x:%x:%x:%x\n",lsB,second,third,msB);
+    int to_return = 0;
     to_return += msB;
-    printf("1 : %x\t",to_return);
+
     to_return *= 256;
     to_return += third;
-    printf("2 : %x\t",to_return);
+
     to_return *= 256;
     to_return += second;
-    printf("3 : %x\t",to_return);
+
     to_return *= 256;
     to_return += lsB;
-    printf("4 : %x\n",to_return);
+
     return to_return;
 }
 
@@ -331,95 +329,31 @@ void exo_2_2(bitmap* header,mp* master)
   FILE *In,*Out;
   do {
       In = fopen("transporteur.bmp","rb");
-      Out = fopen("Ex2_2.bmp","wb");
+      Out = fopen("Ex2_2.jpg","wb");
      }while(test_succes(In) != YES || test_succes(Out) != YES);
 
-  // for(int cursor = 0 ; cursor < header->size_header ; cursor++)
-  //     {
-  //       fprintf(Out,"%c",getc(In));
-  //     }
- int size = (( int)header->image->tailleEntete*3)+(int)header->image->hauteur+54;
- printf("%d\n",size);
-  // char lama;
-  // for(int cursor = 0 ; cursor < size; cursor++)
-  // {
-  //   lama = getc(In);
-  //   printf("%c",lama);
-  // }
-
-  //couleurPallete* rvb = extract_RVB(In,header,master);
-
+  for(int cursor = 0 ; cursor < header->size_header ; cursor++)
+      {
+        getc(In);
+      }
+  unsigned int character = '\0';
+  int power = 7;
+  unsigned int buffer = 0;
+  do {
+      character = getc(In);
+      if(character%2 == 1)
+        buffer += pow(2,power);
+      power--;
+      if(power == -1)
+        {
+          power = 7;
+          fprintf(Out,"%c",buffer);
+          buffer = 0;
+        }
+      }while(character != EOF);
   fclose(In);
   fclose(Out);
 }
 
-couleurPallete* extract_RVB(FILE* In,bitmap* header,mp* master)
-{
-  unsigned char hidden_bit = 0;
-  char character = '\0';
-  unsigned char buffer = 0;
-  couleurPallete* couleur = NULL;
-  do {
-      couleur = new_cell(couleur,master);
-      for(int rank = 0 ; rank < 24 ; rank++)
-        {
-          character = getc(In);
-          hidden_bit = (unsigned char)character&LSB;
-          if( rank == 7 || rank == 15 || rank == 23)
-            {
-            buffer += hidden_bit*pow(2,7-((rank)%8));
-            switch (rank){
-                case 7:
-                    couleur->R = buffer;
-                    buffer = 0;
-                    break;
-                case 15:
-                    couleur->V = buffer;
-                    buffer = 0;
-                    break;
-                case 23:
-                    couleur->B = buffer;
-                    buffer = 0;
-                    break;
-                          }
-            }
-        }
-      } while(character != EOF);
-  return reach_first_cell(couleur);
-}
-
-couleurPallete* new_cell(couleurPallete* last_cell,mp* master)
-{
-  couleurPallete* to_return;
-  do{
-    to_return = malloc(sizeof(couleurPallete));
-    if (test_succes(to_return) == YES)
-      add_pointer_master((void*)to_return ,master);
-     }while(test_succes(to_return) != YES);
-
-  if (last_cell == NULL)
-    {
-      to_return->next = NULL;
-      to_return->previous = NULL;
-    }
-  else
-    {
-      to_return->next = NULL;
-      to_return->previous = last_cell;
-      last_cell->next = to_return;
-    }
-    printf("Nouvelle Cellule\n");
-  return to_return;
-}
-
-couleurPallete* reach_first_cell(couleurPallete* cell)
-{
-  couleurPallete* to_return = cell;
-  while(to_return->previous != NULL)
-    {
-      to_return = to_return->previous;
-    }
-  return to_return;
-}
 
 /* -------------Exo 2------------- */
