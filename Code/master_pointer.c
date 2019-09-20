@@ -37,12 +37,12 @@ int add_pointer_master(void* pointer,mp* master)
 
 mp* reach_last_cell(mp* head)
 {
-  mp* to_return = head;
-  while(to_return->next != NULL)
+  void* to_return = head;
+  while(((mp*)to_return)->next != NULL)
     {
-      to_return = to_return->next;
+      to_return = ((mp*)to_return)->next;
     }
-  return to_return;
+  return (mp*)to_return;
 }
 
 //Libère chacune des cellules d'une liste chaînée en partant de la tête, la structure doit avoir un pointeur next.
