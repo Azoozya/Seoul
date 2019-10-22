@@ -145,7 +145,7 @@ int* merge_bits(char* bits,long max_alpha_char,mp* master)
       //POWER
       for(int power = 0 ; power < 8 ; power++)
         {
-          buffer += bits[cursor]*pow(2,power);
+          buffer += bits[cursor]*(int)(pow(2.0,power));
           cursor++;
         }
       to_return[rank] = buffer;
