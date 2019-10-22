@@ -61,6 +61,20 @@ int test_succes(void* name)
     return YES;
 }
 
+int my_pow(int x , int alpha)
+{
+  int tmp = x;
+  if(alpha == 0)
+      return 1;
+  else if(alpha == 1)
+    return x;
+  else
+    {
+      for(int depth = 1 ; depth < alpha ; depth++)
+        x = x*tmp;
+      return x;
+    }
+}
 /* -------------Exo 1------------- */
 void exo_1(mp* master)
 {
@@ -143,9 +157,9 @@ int* merge_bits(char* bits,long max_alpha_char,mp* master)
     {
       buffer = 0;
       //POWER
-      for(int power = 0 ; power < 8 ; power++)
+      for(int power = 7 ; power >= 0 ; power--)
         {
-          buffer += bits[cursor]*(int)(pow(2.0,power));
+          buffer += bits[cursor]*my_pow(2,power);
           cursor++;
         }
       to_return[rank] = buffer;
@@ -343,7 +357,7 @@ void exo_2_2(bitmap* header)
   do {
       character = getc(In);
       if(character%2 == 1)
-        buffer += pow(2,power);
+        buffer += my_pow(2,power);
       power--;
       if(power == -1)
         {
@@ -363,7 +377,7 @@ void exo_2_3(bitmap* header)
       Source = fopen("Ex2_2.jpg","rb");
       Transporteur = fopen("originel.bmp","rb");
       Out = fopen("Ex2_3.bmp","wb");
-      printf("%p::%p:%p\n",Source,Transporteur,Out);
+      // printf("%p::%p:%p\n",Source,Transporteur,Out);
     }while(test_succes(Transporteur) != YES || test_succes(Source) != YES || test_succes(Out) != YES);
 
   int character_source = '\0';
@@ -399,3 +413,12 @@ void exo_2_3(bitmap* header)
 }
 
 /* -------------Exo 2------------- */
+
+
+void test_my_pow(void)
+{
+  for (int depth = 0; depth < 10; depth++)
+    {
+        printf("[My_pow]Pour %d : %d , %d , %d , %d\n",depth,my_pow(depth,0),my_pow(depth,1),my_pow(depth,2),my_pow(depth,3));
+    }
+}

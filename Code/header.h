@@ -90,6 +90,8 @@ void delete_down(mp* head);
 /* fonctions */
 void delete_up_and_down(REPLACE_ME* cell);
 int test_succes(void* name);
+int my_pow(int x , int alpha);
+
 
 void exo_1(mp* master);
 long get_nb_alpha_char(char* filename);
@@ -113,3 +115,4 @@ void exo_2_3(bitmap* header);
 /* main (devrait être vide) */
 
 /* test */
+void test_my_pow(void);
