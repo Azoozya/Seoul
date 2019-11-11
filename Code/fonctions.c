@@ -1,7 +1,7 @@
 #include "header.h"
 
-//Libère chacune des cellules d'une liste chaînée de n'importe quel cellule , voir modèle de structure REPLACE_ME
 void delete_up_and_down(REPLACE_ME* cell)
+//Libère chacune des cellules d'une liste chaînée de n'importe quel cellule , voir modèle de structure REPLACE_ME
 {
   //Vérifie si on a un pointeur valable
   if (cell != NULL)
@@ -52,8 +52,8 @@ void delete_up_and_down(REPLACE_ME* cell)
     printf("delete_up_and_down : Pointeur invalide\n");
 }
 
-//Vérifie si l'allocation a réussi
 int test_succes(void* name)
+//Vérifie si l'allocation a réussi
 {
   if (name == NULL)
     return NO;
@@ -62,6 +62,7 @@ int test_succes(void* name)
 }
 
 int my_pow(int x , int alpha)
+// Fonction calculant x puissance alpha
 {
   int tmp = x;
   if(alpha == 0)
@@ -75,8 +76,11 @@ int my_pow(int x , int alpha)
       return x;
     }
 }
+
+
 /* -------------Exo 1------------- */
 void exo_1(mp* master)
+/* Protocole de décodage de l'exercice 1 : Majuscule / Minuscule */
 {
   FILE* Out;
   do {
@@ -84,17 +88,19 @@ void exo_1(mp* master)
      }while(test_succes(Out) != YES);
 
   char* filename = "transporteur.txt";
-  long max_alpha_char = get_nb_alpha_char(filename);
-  char* bits = alpha_filter(filename,max_alpha_char,master);
-  int* bytes = merge_bits(bits,max_alpha_char,master);
+  long max_alpha_char = get_nb_alpha_char(filename);  //Compte le nombre de caractères dans le fichier
+  char* bits = alpha_filter(filename,max_alpha_char,master);  //Traduit les minuscules et majuscules du fichier en bits
+  int* bytes = merge_bits(bits,max_alpha_char,master);  //Fusionne les bits pourge en faire des octets
 
   for(int cursor = 0 ; cursor < max_alpha_char/8 ; cursor++)
-    fprintf(Out,"%c", bytes[cursor]);
+    fprintf(Out,"%c", bytes[cursor]); //Ecrit le message décodé à l'aide des octets récuperés plus haut.
 
   fclose(Out);
 }
 
 long get_nb_alpha_char(char* filename)
+/* Fonction retournant le nombre de caractères alpha-numérique
+présent dans le fichier dont le nom est passé en argument */
 {
   FILE *In;
   long to_return = 0;
@@ -115,6 +121,8 @@ long get_nb_alpha_char(char* filename)
 }
 
 char* alpha_filter(char* filename,long max_alpha_char,mp* master)
+/* Cette fonction remplit un tableau contenant les valeurs 0 et 1 en fonction de l'état des caractères lus :
+  Si c'est une majuscule, la valeur 1 sera mise dans le tableau. Si c'est une minuscule, ce sera la valeur 0. */
 {
   FILE* In;
   char* to_return;
@@ -143,6 +151,8 @@ char* alpha_filter(char* filename,long max_alpha_char,mp* master)
 }
 
 int* merge_bits(char* bits,long max_alpha_char,mp* master)
+/* Cette fonction fusionne les bits (présent dans un tableau contenant des 0 et des 1)
+  en octets (valeur allant de 0 à 255) et les mets dans un tableau. */
 {
   int buffer;
   long cursor = 0;
@@ -166,6 +176,7 @@ int* merge_bits(char* bits,long max_alpha_char,mp* master)
     }
   return to_return;
 }
+
 /* -------------Exo 1------------- */
 
 
