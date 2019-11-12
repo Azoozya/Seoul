@@ -199,6 +199,7 @@ void exo_2_1(bitmap* header)
 }
 
 bitmap* init_header(mp* master)
+/*Initialisation de la structure "header", strucutre permettant de gérer les données des fichiers d'images*/
 {
   char size_char = sizeof(char);
   char size_short = sizeof(short);
@@ -253,6 +254,7 @@ bitmap* init_header(mp* master)
 }
 
 void extract_raw_header(bitmap* header,mp* master)
+/*Extrait les données de l'en-tête du fichier "transporteur.bmp" et les sépare (données du fichier en général et données de l'image) */
 {
   FILE* In;
   do {
@@ -288,6 +290,7 @@ void extract_raw_header(bitmap* header,mp* master)
 }
 
 unsigned short char_to_short(unsigned char msB,unsigned char lsB)
+/*Fonction convertissant des valeurs char en valeurs short*/
 {
   unsigned short to_return = 0;
   to_return = lsB+256*msB;
@@ -295,6 +298,7 @@ unsigned short char_to_short(unsigned char msB,unsigned char lsB)
 }
 
 unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char msB,unsigned char third)
+/* Fonction convertissant des veleurs char en valeurs int */
 {
     int to_return = 0;
     to_return += msB;
@@ -312,6 +316,7 @@ unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char ms
 }
 
 void raw_to_fichierEntete(bitmap* header)
+/*Classe les données de l'en-tête du fichier dans la structure fichierEntete*/
 {
   char* raw = header->raw_fichier;
   header->fichier->signature = char_to_short((unsigned char)raw[1],(unsigned char)raw[0]);
@@ -321,6 +326,7 @@ void raw_to_fichierEntete(bitmap* header)
 }
 
 void raw_to_imageEntete(bitmap* header)
+/*Classe les données de l'en-tête de l'image dans la structure imageEntete*/
 {
   char* raw = header->raw_image;
   header->image->tailleEntete = char_to_int((unsigned char)raw[3],(unsigned char)raw[2],(unsigned char)raw[1],(unsigned char)raw[0]);
@@ -337,6 +343,7 @@ void raw_to_imageEntete(bitmap* header)
 }
 
 void show_struct(bitmap* header)
+/*Ecrit les données de l'en-tête du fichier "transporteur.bmp" dans le fichier Ex2_1.txt*/
 {
   FILE* Out;
   do {
@@ -351,6 +358,7 @@ void show_struct(bitmap* header)
 }
 
 void exo_2_2(bitmap* header)
+//Sténographie : Cette fonction prend chaque octet de la fonction (quid de l'en-tête), y applique un modulo 2 (bit de poids faible à 0 ou 1) et l'écrit dans le fohoer qu'il faut 
 {
   FILE *In,*Out;
   do {
