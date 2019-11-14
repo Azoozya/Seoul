@@ -121,6 +121,7 @@ void test_char_to_int(void)
 	else printf("char_to_int() non fonctionnel\n");
 }
 
+
 // void test_exo_2_2(void)
 // {
 // 	int success = 0;
