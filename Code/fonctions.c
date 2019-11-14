@@ -188,8 +188,8 @@ void exo_2(mp* master)
   raw_to_fichierEntete(header);
   raw_to_imageEntete(header);
   //
-  exo_2_1(header);
-  exo_2_2(header);
+//  exo_2_1(header);
+  //exo_2_2(header);
   exo_2_3(header);
 }
 
@@ -254,7 +254,8 @@ bitmap* init_header(mp* master)
 }
 
 void extract_raw_header(bitmap* header,mp* master)
-/*Extrait les données de l'en-tête du fichier "transporteur.bmp" et les sépare (données du fichier en général et données de l'image) */
+/*Extrait les données de l'en-tête du fichier "transporteur.bmp" et les sépare
+  (entre données du fichier en général et données de l'image) */
 {
   FILE* In;
   do {
@@ -358,7 +359,9 @@ void show_struct(bitmap* header)
 }
 
 void exo_2_2(bitmap* header)
-//Sténographie : Cette fonction prend chaque octet de la fonction (quid de l'en-tête), y applique un modulo 2 (bit de poids faible à 0 ou 1) et l'écrit dans le fohoer qu'il faut 
+/*Sténographie : Cette fonction prend chaque octet de la fonction (quid de l'en-tête),
+  y applique un modulo 2 (bit de poids faible à 0 ou 1) et l'écrit dans le fohoer qu'il faut
+  (après l'avoir rassemnler en octet) */
 {
   FILE *In,*Out;
   do {
@@ -390,6 +393,7 @@ void exo_2_2(bitmap* header)
 }
 
 void exo_2_3(bitmap* header)
+/*Recréation du fichier transporteur à partir de l'image originel et de l'image de l'homme démasqué*/
 {
   FILE *Source,*Transporteur,*Out;
   do{
@@ -403,13 +407,16 @@ void exo_2_3(bitmap* header)
   int character_transporteur = '\0';
   int bits[8] = {0};
 
-  for(int cursor = 0 ; cursor < 54 ; cursor++)
+  for(int cursor = 0 ; cursor < header->size_header ; cursor++)
+  //Recopie de l'en-tête dans le fichier en sortie
     {
         fprintf(Out,"%c",getc(Transporteur));
     }
 
   do {
     character_source = getc(Source);
+
+    //Enregistrement des valeurs binaires pour chaque octet du fichier source (l'hommr démasqué) :
     bits[0] = (character_source&MSB)>>7;
     bits[1] = (character_source&SSSSSB)>>6;
     bits[2] = (character_source&SSSB)>>5;
@@ -418,10 +425,13 @@ void exo_2_3(bitmap* header)
     bits[5] = (character_source&TSB)>>2;
     bits[6] = (character_source&SSB)>>1;
     bits[7] = (character_source&LSB);
+
+    /*Pour chaque octet du fichier originel, on force le dernier bit à 0 et
+      on y ajoute la valeur binaire actuelle de la série stockée dans le tableau "bits" (soit 0 ou 1).*/
     for(int cursor = 0 ; cursor < 8 ; cursor++)
       {
-        character_transporteur= getc(Transporteur);
-        character_transporteur= character_transporteur&254;
+        character_transporteur = getc(Transporteur);
+        character_transporteur = character_transporteur&254;
         fprintf(Out,"%c",character_transporteur+bits[cursor]);
       }
   } while(character_source!= EOF);
