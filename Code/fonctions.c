@@ -187,9 +187,9 @@ void exo_2(mp* master)
   extract_raw_header(header,master);
   raw_to_fichierEntete(header);
   raw_to_imageEntete(header);
-  //
-//  exo_2_1(header);
-  //exo_2_2(header);
+  
+  exo_2_1(header);
+  exo_2_2(header);
   exo_2_3(header);
 }
 

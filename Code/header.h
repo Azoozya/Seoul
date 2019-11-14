@@ -121,8 +121,7 @@ void test_get_nb_alpha_char(void);
 void test_alpha_filter(mp* master);
 void test_merge_bits(mp* master);
 
-
 void test_char_to_short(void);
 void test_char_to_int(void);
-void test_exo_2_2(void);
-void test_exo_2_3(void);
+// void test_exo_2_2(void);
+// void test_exo_2_3(void);

@@ -3,11 +3,12 @@ int main(int argc,char* argv[])
 {
 	mp* master = create_master_pointer();
 
-	//test_my_pow();
-	//test_merge_bits(master);
-	//test_get_nb_alpha_char(); //A REVOIR !
-	//test_alpha_filter(master);
+	test_my_pow();
+	test_merge_bits(master);
+	test_get_nb_alpha_char(); //A REVOIR !
+	test_alpha_filter(master);
 	test_char_to_int();
+	test_char_to_short();
 
 	delete_down(master);
 	return 0;
@@ -16,31 +17,18 @@ int main(int argc,char* argv[])
 /*-----------------TEST EXO 1-----------------*/
 void test_get_nb_alpha_char(void)
 {
+	int success = 0;
 	FILE *Test;
 	int Nbr = 300;
 	long test;
 	char* test_filename = "Get_nb_alpha_char_Test.txt";
-	int Q_letter = 0x71;
-	char Space = ' ';
-
-	do {
-    Test = fopen(test_filename,"w");
-	}while(test_succes(Test) != YES);
-
-	for (int index = 0; index < Nbr; index++)
-	{
-		if (index%2 == 0) fprintf(Test,"%c",Q_letter);
-		else fprintf(Test,"%c",Space);
-	}
 
 	test = get_nb_alpha_char(test_filename);
 
-	printf("%ld\n",test);
+	if (test != 26) success = 1;
 
-	if (test == Nbr/2) printf("get_nb_alpha_char() fonctionnel\n");
+	if (success != 1) printf("get_nb_alpha_char() fonctionnel\n");
 	else printf("get_nb_alpha_char() non fonctionnel\n");
-
-	fclose(Test);
 }
 
 void test_alpha_filter(mp* master)
@@ -133,22 +121,22 @@ void test_char_to_int(void)
 	else printf("char_to_int() non fonctionnel\n");
 }
 
-void test_exo_2_2(void)
-{
-	int success = 0;
-
-
-	if (success != 1) printf("exo_2_2() fonctionnel\n");
-	else printf("exo_2_2() non fonctionnel\n");
-}
-
-void test_exo_2_3(void)
-{
-	int success = 0;
-
-
-	if (success != 1) printf("exo_2_3() fonctionnel\n");
-	else printf("exo_2_3() non fonctionnel\n");
-}
+// void test_exo_2_2(void)
+// {
+// 	int success = 0;
+//
+//
+// 	if (success != 1) printf("exo_2_2() fonctionnel\n");
+// 	else printf("exo_2_2() non fonctionnel\n");
+// }
+//
+// void test_exo_2_3(void)
+// {
+// 	int success = 0;
+//
+//
+// 	if (success != 1) printf("exo_2_3() fonctionnel\n");
+// 	else printf("exo_2_3() non fonctionnel\n");
+// }
 
 /*-----------------TEST EXO 2-----------------*/
