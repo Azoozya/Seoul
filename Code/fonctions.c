@@ -52,7 +52,7 @@ void delete_up_and_down(REPLACE_ME* cell)
     printf("delete_up_and_down : Pointeur invalide\n");
 }
 
-int test_succes(void* name)
+int test_success(void* name)
 //Vérifie si l'allocation a réussi
 {
   if (name == NULL)
@@ -85,7 +85,7 @@ void exo_1(mp* master)
   FILE* Out;
   do {
     Out = fopen("Ex1.txt","w");
-     }while(test_succes(Out) != YES);
+     }while(test_success(Out) != YES);
 
   char* filename = "transporteur.txt";
   long max_alpha_char = get_nb_alpha_char(filename);  //Compte le nombre de caractères dans le fichier
@@ -130,7 +130,7 @@ char* alpha_filter(char* filename,long max_alpha_char,mp* master)
   long counter = 0;
   do {
       to_return = malloc(max_alpha_char*sizeof(char));
-     }while(test_succes(to_return) != YES);
+     }while(test_success(to_return) != YES);
   add_pointer_master((void*)to_return ,master);
 
   In = fopen(filename,"r");
@@ -159,9 +159,9 @@ int* merge_bits(char* bits,long max_alpha_char,mp* master)
   int* to_return;
    do{
     to_return = malloc((max_alpha_char/8)*sizeof(int));
-    if (test_succes(to_return) == YES)
+    if (test_success(to_return) == YES)
       add_pointer_master((void*)to_return ,master);
-     }while(test_succes(to_return) != YES);
+     }while(test_success(to_return) != YES);
 
   for(int rank = 0 ; rank < max_alpha_char/8 ; rank++)
     {
@@ -187,7 +187,7 @@ void exo_2(mp* master)
   extract_raw_header(header,master);
   raw_to_fichierEntete(header);
   raw_to_imageEntete(header);
-  
+
   exo_2_1(header);
   exo_2_2(header);
   exo_2_3(header);
@@ -208,44 +208,44 @@ bitmap* init_header(mp* master)
   bitmap* to_return;
   do{
     to_return = malloc(sizeof(bitmap));
-    if (test_succes(to_return) == YES)
+    if (test_success(to_return) == YES)
       add_pointer_master((void*)to_return ,master);
-    }while(test_succes(to_return) != YES);
+    }while(test_success(to_return) != YES);
 
   fichierEntete* fichier;
   do{
   	fichier = malloc(sizeof(fichierEntete));
-  	if (test_succes(fichier) == YES)
+  	if (test_success(fichier) == YES)
   		add_pointer_master((void*)fichier ,master);
-    }while(test_succes(fichier) != YES);
+    }while(test_success(fichier) != YES);
 
   imageEntete* image;
   do{
     image = malloc(sizeof(imageEntete));
-    if (test_succes(image) == YES)
+    if (test_success(image) == YES)
       add_pointer_master((void*)image ,master);
-    }while(test_succes(image) != YES);
+    }while(test_success(image) != YES);
 
   to_return->fichier = fichier;
-  to_return->size_fichierEntete = (3*size_int+size_short);
+  to_return->size_fichierEntete = (3*size_int+size_short); //taille de l'en-tète du fichier
   to_return->image = image;
-  to_return->size_imageEntete = (9*size_int+2*size_short);
+  to_return->size_imageEntete = (9*size_int+2*size_short); //taille de len-tête de l'image
   to_return->size_couleurPallete = (4*size_char);
-  to_return->size_header = to_return->size_imageEntete+to_return->size_fichierEntete;
+  to_return->size_header = to_return->size_imageEntete+to_return->size_fichierEntete; //taille de l'en-tête complète
 
   char* raw_fichier;
   do{
   	raw_fichier = malloc(to_return->size_fichierEntete*sizeof(char));
-  	if (test_succes(raw_fichier) == YES)
+  	if (test_success(raw_fichier) == YES)
   		add_pointer_master((void*)raw_fichier ,master);
-    }while(test_succes(raw_fichier) != YES);
+    }while(test_success(raw_fichier) != YES);
 
   char* raw_image;
   do{
   	raw_image = malloc(to_return->size_imageEntete*sizeof(char));
-  	if (test_succes(raw_image) == YES)
+  	if (test_success(raw_image) == YES)
   		add_pointer_master((void*)raw_image ,master);
-    }while(test_succes(raw_image) != YES);
+    }while(test_success(raw_image) != YES);
 
   to_return->raw_fichier = raw_fichier;
   to_return->raw_image = raw_image;
@@ -260,14 +260,14 @@ void extract_raw_header(bitmap* header,mp* master)
   FILE* In;
   do {
     In = fopen("transporteur.bmp","rb");
-  } while(test_succes(In) != YES);
+  } while(test_success(In) != YES);
 
   char* raw;
   do{
   	raw = malloc((header->size_header)*sizeof(char));
-  	if (test_succes(raw) == YES)
+  	if (test_success(raw) == YES)
   		add_pointer_master((void*)raw ,master);
-    }while(test_succes(raw) != YES);
+    }while(test_success(raw) != YES);
 
   char buffer = '\0';
   for(int cursor = 0 ; cursor < header->size_header ; cursor++)
@@ -349,7 +349,7 @@ void show_struct(bitmap* header)
   FILE* Out;
   do {
     Out = fopen("Ex2_1.txt","w");
-  } while(test_succes(Out) != YES);
+  } while(test_success(Out) != YES);
 
   fichierEntete* fichier = header->fichier;
   fprintf(Out,"%x\t%x\t%x\t%x\n",fichier->signature,fichier->tailleFichier,fichier->reserve,fichier->offset);
@@ -367,7 +367,7 @@ void exo_2_2(bitmap* header)
   do {
       In = fopen("transporteur.bmp","rb");
       Out = fopen("Ex2_2.jpg","wb");
-     }while(test_succes(In) != YES || test_succes(Out) != YES);
+     }while(test_success(In) != YES || test_success(Out) != YES);
 
   for(int cursor = 0 ; cursor < header->size_header ; cursor++)
       {
@@ -401,7 +401,7 @@ void exo_2_3(bitmap* header)
       Transporteur = fopen("originel.bmp","rb");
       Out = fopen("Ex2_3.bmp","wb");
       // printf("%p::%p:%p\n",Source,Transporteur,Out);
-    }while(test_succes(Transporteur) != YES || test_succes(Source) != YES || test_succes(Out) != YES);
+    }while(test_success(Transporteur) != YES || test_success(Source) != YES || test_success(Out) != YES);
 
   int character_source = '\0';
   int character_transporteur = '\0';
