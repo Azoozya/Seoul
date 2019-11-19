@@ -1,7 +1,7 @@
 #include "header.h"
 
-//Libère chacune des cellules d'une liste chaînée de n'importe quel cellule , voir modèle de structure REPLACE_ME
 void delete_up_and_down(REPLACE_ME* cell)
+//Libère chacune des cellules d'une liste chaînée de n'importe quel cellule , voir modèle de structure REPLACE_ME
 {
   //Vérifie si on a un pointeur valable
   if (cell != NULL)
@@ -52,8 +52,8 @@ void delete_up_and_down(REPLACE_ME* cell)
     printf("delete_up_and_down : Pointeur invalide\n");
 }
 
+int test_success(void* name)
 //Vérifie si l'allocation a réussi
-int test_succes(void* name)
 {
   if (name == NULL)
     return NO;
@@ -62,6 +62,7 @@ int test_succes(void* name)
 }
 
 int my_pow(int x , int alpha)
+// Fonction calculant x puissance alpha
 {
   int tmp = x;
   if(alpha == 0)
@@ -75,26 +76,31 @@ int my_pow(int x , int alpha)
       return x;
     }
 }
+
+
 /* -------------Exo 1------------- */
 void exo_1(mp* master)
+/* Protocole de décodage de l'exercice 1 : Majuscule / Minuscule */
 {
   FILE* Out;
   do {
     Out = fopen("Ex1.txt","w");
-     }while(test_succes(Out) != YES);
+     }while(test_success(Out) != YES);
 
   char* filename = "transporteur.txt";
-  long max_alpha_char = get_nb_alpha_char(filename);
-  char* bits = alpha_filter(filename,max_alpha_char,master);
-  int* bytes = merge_bits(bits,max_alpha_char,master);
+  long max_alpha_char = get_nb_alpha_char(filename);  //Compte le nombre de caractères dans le fichier
+  char* bits = alpha_filter(filename,max_alpha_char,master);  //Traduit les minuscules et majuscules du fichier en bits
+  int* bytes = merge_bits(bits,max_alpha_char,master);  //Fusionne les bits pourge en faire des octets
 
   for(int cursor = 0 ; cursor < max_alpha_char/8 ; cursor++)
-    fprintf(Out,"%c", bytes[cursor]);
+    fprintf(Out,"%c", bytes[cursor]); //Ecrit le message décodé à l'aide des octets récuperés plus haut.
 
   fclose(Out);
 }
 
 long get_nb_alpha_char(char* filename)
+/* Fonction retournant le nombre de caractères alpha-numérique
+présent dans le fichier dont le nom est passé en argument */
 {
   FILE *In;
   long to_return = 0;
@@ -115,6 +121,8 @@ long get_nb_alpha_char(char* filename)
 }
 
 char* alpha_filter(char* filename,long max_alpha_char,mp* master)
+/* Cette fonction remplit un tableau contenant les valeurs 0 et 1 en fonction de l'état des caractères lus :
+  Si c'est une majuscule, la valeur 1 sera mise dans le tableau. Si c'est une minuscule, ce sera la valeur 0. */
 {
   FILE* In;
   char* to_return;
@@ -122,7 +130,7 @@ char* alpha_filter(char* filename,long max_alpha_char,mp* master)
   long counter = 0;
   do {
       to_return = malloc(max_alpha_char*sizeof(char));
-     }while(test_succes(to_return) != YES);
+     }while(test_success(to_return) != YES);
   add_pointer_master((void*)to_return ,master);
 
   In = fopen(filename,"r");
@@ -143,15 +151,17 @@ char* alpha_filter(char* filename,long max_alpha_char,mp* master)
 }
 
 int* merge_bits(char* bits,long max_alpha_char,mp* master)
+/* Cette fonction fusionne les bits (présent dans un tableau contenant des 0 et des 1)
+  en octets (valeur allant de 0 à 255) et les mets dans un tableau. */
 {
   int buffer;
   long cursor = 0;
   int* to_return;
    do{
     to_return = malloc((max_alpha_char/8)*sizeof(int));
-    if (test_succes(to_return) == YES)
+    if (test_success(to_return) == YES)
       add_pointer_master((void*)to_return ,master);
-     }while(test_succes(to_return) != YES);
+     }while(test_success(to_return) != YES);
 
   for(int rank = 0 ; rank < max_alpha_char/8 ; rank++)
     {
@@ -166,6 +176,7 @@ int* merge_bits(char* bits,long max_alpha_char,mp* master)
     }
   return to_return;
 }
+
 /* -------------Exo 1------------- */
 
 
@@ -176,7 +187,7 @@ void exo_2(mp* master)
   extract_raw_header(header,master);
   raw_to_fichierEntete(header);
   raw_to_imageEntete(header);
-  //
+
   exo_2_1(header);
   exo_2_2(header);
   exo_2_3(header);
@@ -188,6 +199,7 @@ void exo_2_1(bitmap* header)
 }
 
 bitmap* init_header(mp* master)
+/*Initialisation de la structure "header", strucutre permettant de gérer les données des fichiers d'images*/
 {
   char size_char = sizeof(char);
   char size_short = sizeof(short);
@@ -196,44 +208,44 @@ bitmap* init_header(mp* master)
   bitmap* to_return;
   do{
     to_return = malloc(sizeof(bitmap));
-    if (test_succes(to_return) == YES)
+    if (test_success(to_return) == YES)
       add_pointer_master((void*)to_return ,master);
-    }while(test_succes(to_return) != YES);
+    }while(test_success(to_return) != YES);
 
   fichierEntete* fichier;
   do{
   	fichier = malloc(sizeof(fichierEntete));
-  	if (test_succes(fichier) == YES)
+  	if (test_success(fichier) == YES)
   		add_pointer_master((void*)fichier ,master);
-    }while(test_succes(fichier) != YES);
+    }while(test_success(fichier) != YES);
 
   imageEntete* image;
   do{
     image = malloc(sizeof(imageEntete));
-    if (test_succes(image) == YES)
+    if (test_success(image) == YES)
       add_pointer_master((void*)image ,master);
-    }while(test_succes(image) != YES);
+    }while(test_success(image) != YES);
 
   to_return->fichier = fichier;
-  to_return->size_fichierEntete = (3*size_int+size_short);
+  to_return->size_fichierEntete = (3*size_int+size_short); //taille de l'en-tète du fichier
   to_return->image = image;
-  to_return->size_imageEntete = (9*size_int+2*size_short);
+  to_return->size_imageEntete = (9*size_int+2*size_short); //taille de len-tête de l'image
   to_return->size_couleurPallete = (4*size_char);
-  to_return->size_header = to_return->size_imageEntete+to_return->size_fichierEntete;
+  to_return->size_header = to_return->size_imageEntete+to_return->size_fichierEntete; //taille de l'en-tête complète
 
   char* raw_fichier;
   do{
   	raw_fichier = malloc(to_return->size_fichierEntete*sizeof(char));
-  	if (test_succes(raw_fichier) == YES)
+  	if (test_success(raw_fichier) == YES)
   		add_pointer_master((void*)raw_fichier ,master);
-    }while(test_succes(raw_fichier) != YES);
+    }while(test_success(raw_fichier) != YES);
 
   char* raw_image;
   do{
   	raw_image = malloc(to_return->size_imageEntete*sizeof(char));
-  	if (test_succes(raw_image) == YES)
+  	if (test_success(raw_image) == YES)
   		add_pointer_master((void*)raw_image ,master);
-    }while(test_succes(raw_image) != YES);
+    }while(test_success(raw_image) != YES);
 
   to_return->raw_fichier = raw_fichier;
   to_return->raw_image = raw_image;
@@ -242,18 +254,20 @@ bitmap* init_header(mp* master)
 }
 
 void extract_raw_header(bitmap* header,mp* master)
+/*Extrait les données de l'en-tête du fichier "transporteur.bmp" et les sépare
+  (entre données du fichier en général et données de l'image) */
 {
   FILE* In;
   do {
     In = fopen("transporteur.bmp","rb");
-  } while(test_succes(In) != YES);
+  } while(test_success(In) != YES);
 
   char* raw;
   do{
   	raw = malloc((header->size_header)*sizeof(char));
-  	if (test_succes(raw) == YES)
+  	if (test_success(raw) == YES)
   		add_pointer_master((void*)raw ,master);
-    }while(test_succes(raw) != YES);
+    }while(test_success(raw) != YES);
 
   char buffer = '\0';
   for(int cursor = 0 ; cursor < header->size_header ; cursor++)
@@ -277,6 +291,7 @@ void extract_raw_header(bitmap* header,mp* master)
 }
 
 unsigned short char_to_short(unsigned char msB,unsigned char lsB)
+/*Fonction convertissant des valeurs char en valeurs short*/
 {
   unsigned short to_return = 0;
   to_return = lsB+256*msB;
@@ -284,6 +299,7 @@ unsigned short char_to_short(unsigned char msB,unsigned char lsB)
 }
 
 unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char msB,unsigned char third)
+/* Fonction convertissant des veleurs char en valeurs int */
 {
     int to_return = 0;
     to_return += msB;
@@ -301,6 +317,7 @@ unsigned int char_to_int(unsigned char second,unsigned char lsB,unsigned char ms
 }
 
 void raw_to_fichierEntete(bitmap* header)
+/*Classe les données de l'en-tête du fichier dans la structure fichierEntete*/
 {
   char* raw = header->raw_fichier;
   header->fichier->signature = char_to_short((unsigned char)raw[1],(unsigned char)raw[0]);
@@ -310,6 +327,7 @@ void raw_to_fichierEntete(bitmap* header)
 }
 
 void raw_to_imageEntete(bitmap* header)
+/*Classe les données de l'en-tête de l'image dans la structure imageEntete*/
 {
   char* raw = header->raw_image;
   header->image->tailleEntete = char_to_int((unsigned char)raw[3],(unsigned char)raw[2],(unsigned char)raw[1],(unsigned char)raw[0]);
@@ -326,11 +344,12 @@ void raw_to_imageEntete(bitmap* header)
 }
 
 void show_struct(bitmap* header)
+/*Ecrit les données de l'en-tête du fichier "transporteur.bmp" dans le fichier Ex2_1.txt*/
 {
   FILE* Out;
   do {
     Out = fopen("Ex2_1.txt","w");
-  } while(test_succes(Out) != YES);
+  } while(test_success(Out) != YES);
 
   fichierEntete* fichier = header->fichier;
   fprintf(Out,"%x\t%x\t%x\t%x\n",fichier->signature,fichier->tailleFichier,fichier->reserve,fichier->offset);
@@ -340,12 +359,15 @@ void show_struct(bitmap* header)
 }
 
 void exo_2_2(bitmap* header)
+/*Sténographie : Cette fonction prend chaque octet de la fonction (quid de l'en-tête),
+  y applique un modulo 2 (bit de poids faible à 0 ou 1) et l'écrit dans le fohoer qu'il faut
+  (après l'avoir rassemnler en octet) */
 {
   FILE *In,*Out;
   do {
       In = fopen("transporteur.bmp","rb");
       Out = fopen("Ex2_2.jpg","wb");
-     }while(test_succes(In) != YES || test_succes(Out) != YES);
+     }while(test_success(In) != YES || test_success(Out) != YES);
 
   for(int cursor = 0 ; cursor < header->size_header ; cursor++)
       {
@@ -371,6 +393,7 @@ void exo_2_2(bitmap* header)
 }
 
 void exo_2_3(bitmap* header)
+/*Recréation du fichier transporteur à partir de l'image originel et de l'image de l'homme démasqué*/
 {
   FILE *Source,*Transporteur,*Out;
   do{
@@ -378,19 +401,22 @@ void exo_2_3(bitmap* header)
       Transporteur = fopen("originel.bmp","rb");
       Out = fopen("Ex2_3.bmp","wb");
       // printf("%p::%p:%p\n",Source,Transporteur,Out);
-    }while(test_succes(Transporteur) != YES || test_succes(Source) != YES || test_succes(Out) != YES);
+    }while(test_success(Transporteur) != YES || test_success(Source) != YES || test_success(Out) != YES);
 
   int character_source = '\0';
   int character_transporteur = '\0';
   int bits[8] = {0};
 
-  for(int cursor = 0 ; cursor < 54 ; cursor++)
+  for(int cursor = 0 ; cursor < header->size_header ; cursor++)
+  //Recopie de l'en-tête dans le fichier en sortie
     {
         fprintf(Out,"%c",getc(Transporteur));
     }
 
   do {
     character_source = getc(Source);
+
+    //Enregistrement des valeurs binaires pour chaque octet du fichier source (l'hommr démasqué) :
     bits[0] = (character_source&MSB)>>7;
     bits[1] = (character_source&SSSSSB)>>6;
     bits[2] = (character_source&SSSB)>>5;
@@ -399,10 +425,13 @@ void exo_2_3(bitmap* header)
     bits[5] = (character_source&TSB)>>2;
     bits[6] = (character_source&SSB)>>1;
     bits[7] = (character_source&LSB);
+
+    /*Pour chaque octet du fichier originel, on force le dernier bit à 0 et
+      on y ajoute la valeur binaire actuelle de la série stockée dans le tableau "bits" (soit 0 ou 1).*/
     for(int cursor = 0 ; cursor < 8 ; cursor++)
       {
-        character_transporteur= getc(Transporteur);
-        character_transporteur= character_transporteur&254;
+        character_transporteur = getc(Transporteur);
+        character_transporteur = character_transporteur&254;
         fprintf(Out,"%c",character_transporteur+bits[cursor]);
       }
   } while(character_source!= EOF);

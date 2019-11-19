@@ -89,7 +89,7 @@ void delete_down(mp* head);
 
 /* fonctions */
 void delete_up_and_down(REPLACE_ME* cell);
-int test_succes(void* name);
+int test_success(void* name);
 int my_pow(int x , int alpha);
 
 
@@ -116,3 +116,17 @@ void exo_2_3(bitmap* header);
 
 /* test */
 void test_my_pow(void);
+
+void test_get_nb_alpha_char(void);
+void test_alpha_filter(mp* master);
+void test_merge_bits(mp* master);
+
+void test_char_to_short(void);
+void test_char_to_int(void);
+void test_init_header(mp* master);
+void test_extract_raw_header(mp* master);
+void test_raw_to_fichierEntete(mp* master);
+void test_raw_to_imageEntete(mp* master);
+
+// void test_exo_2_2(void);
+void test_exo_2_3(mp* master);
